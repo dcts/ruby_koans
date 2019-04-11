@@ -1,6 +1,6 @@
-require 'edgecase'
+require File.expand_path(File.dirname(__FILE__) + '/neo')
 
-class AboutTrueAndFalse < EdgeCase::Koan
+class AboutTrueAndFalse < Neo::Koan
   def truth_value(condition)
     if condition
       :true_stuff
@@ -10,7 +10,7 @@ class AboutTrueAndFalse < EdgeCase::Koan
   end
 
   def test_true_is_treated_as_true
-    assert_equal __, truth_value(true)    
+    assert_equal __, truth_value(true)
   end
 
   def test_false_is_treated_as_false

@@ -1,6 +1,6 @@
-require 'edgecase'
+require File.expand_path(File.dirname(__FILE__) + '/neo')
 
-class AboutScope < EdgeCase::Koan
+class AboutScope < Neo::Koan
   module Jims
     class Dog
       def identify
@@ -19,7 +19,7 @@ class AboutScope < EdgeCase::Koan
 
   def test_dog_is_not_available_in_the_current_scope
     assert_raise(___) do
-      fido = Dog.new
+      Dog.new
     end
   end
 
@@ -28,9 +28,9 @@ class AboutScope < EdgeCase::Koan
     rover = Joes::Dog.new
     assert_equal __, fido.identify
     assert_equal __, rover.identify
-    
-    assert_not_equal fido.class, rover.class
-    assert_not_equal Jims::Dog, Joes::Dog
+
+    assert_equal __, fido.class != rover.class
+    assert_equal __, Jims::Dog != Joes::Dog
   end
 
   # ------------------------------------------------------------------
@@ -41,7 +41,7 @@ class AboutScope < EdgeCase::Koan
   def test_bare_bones_class_names_assume_the_current_scope
     assert_equal __, AboutScope::String == String
   end
-  
+
   def test_nested_string_is_not_the_same_as_the_system_string
     assert_equal __, String == "HI".class
   end
@@ -74,6 +74,6 @@ class AboutScope < EdgeCase::Koan
 
   def test_you_can_get_a_list_of_constants_for_any_class_or_module
     assert_equal __, Jims.constants
-    assert_equal __, Object.constants.size
+    assert Object.constants.size > _n_
   end
 end

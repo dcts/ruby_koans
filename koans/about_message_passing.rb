@@ -1,31 +1,31 @@
-require 'edgecase'
+require File.expand_path(File.dirname(__FILE__) + '/neo')
 
-class AboutMessagePassing < EdgeCase::Koan
-  
+class AboutMessagePassing < Neo::Koan
+
   class MessageCatcher
     def caught?
       true
     end
   end
-    
+
   def test_methods_can_be_called_directly
     mc = MessageCatcher.new
-    
-    assert mc.caught?    
+
+    assert mc.caught?
   end
-  
+
   def test_methods_can_be_invoked_by_sending_the_message
     mc = MessageCatcher.new
-    
+
     assert mc.send(:caught?)
   end
-  
+
   def test_methods_can_be_invoked_more_dynamically
     mc = MessageCatcher.new
-    
+
     assert mc.send("caught?")
     assert mc.send("caught" + __ )    # What do you need to add to the first string?
-    assert mc.send("CAUGHT?".__ )      # What would you need to do to the string?
+    assert mc.send("CAUGHT?".____ )      # What would you need to do to the string?
   end
 
   def test_send_with_underscores_will_also_send_messages
@@ -40,29 +40,35 @@ class AboutMessagePassing < EdgeCase::Koan
 
   def test_classes_can_be_asked_if_they_know_how_to_respond
     mc = MessageCatcher.new
-    
+
     assert_equal __, mc.respond_to?(:caught?)
     assert_equal __, mc.respond_to?(:does_not_exist)
   end
-  
+
   # ------------------------------------------------------------------
 
   class MessageCatcher
     def add_a_payload(*args)
-      return :empty unless args
       args
     end
   end
-  
+
   def test_sending_a_message_with_arguments
     mc = MessageCatcher.new
-    
+
     assert_equal __, mc.add_a_payload
     assert_equal __, mc.send(:add_a_payload)
 
     assert_equal __, mc.add_a_payload(3, 4, nil, 6)
     assert_equal __, mc.send(:add_a_payload, 3, 4, nil, 6)
   end
+
+  # NOTE:
+  #
+  # Both obj.msg and obj.send(:msg) sends the message named :msg to
+  # the object. We use "send" when the name of the message can vary
+  # dynamically (e.g. calculated at run time), but by far the most
+  # common way of sending a message is just to say: obj.msg.
 
   # ------------------------------------------------------------------
 
@@ -72,7 +78,7 @@ class AboutMessagePassing < EdgeCase::Koan
   def test_sending_undefined_messages_to_a_typical_object_results_in_errors
     typical = TypicalObject.new
 
-    assert_raise(___) do
+    exception = assert_raise(___) do
       typical.foobar
     end
     assert_match(/foobar/, exception.message)
@@ -90,13 +96,25 @@ class AboutMessagePassing < EdgeCase::Koan
     #
     # If the method :method_missing causes the NoMethodError, then
     # what would happen if we redefine method_missing?
+    #
+    # NOTE:
+    #
+    # In Ruby 1.8 the method_missing method is public and can be
+    # called as shown above. However, in Ruby 1.9 (and later versions)
+    # the method_missing method is private. We explicitly made it
+    # public in the testing framework so this example works in both
+    # versions of Ruby. Just keep in mind you can't call
+    # method_missing like that after Ruby 1.9 normally.
+    #
+    # Thanks.  We now return you to your regularly scheduled Ruby
+    # Koans.
   end
 
   # ------------------------------------------------------------------
 
   class AllMessageCatcher
     def method_missing(method_name, *args, &block)
-      "Someone called #{method_name} with (#{args.join(", ")})"
+      "Someone called #{method_name} with <#{args.join(", ")}>"
     end
   end
 
@@ -111,7 +129,7 @@ class AboutMessagePassing < EdgeCase::Koan
   def test_catching_messages_makes_respond_to_lie
     catcher = AllMessageCatcher.new
 
-    assert_nothing_raised(NoMethodError) do
+    assert_nothing_raised do
       catcher.any_method
     end
     assert_equal __, catcher.respond_to?(:any_method)

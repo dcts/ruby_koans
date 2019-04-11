@@ -1,6 +1,6 @@
-require 'edgecase'
+require File.expand_path(File.dirname(__FILE__) + '/neo')
 
-class AboutClassMethods < EdgeCase::Koan
+class AboutClassMethods < Neo::Koan
   class Dog
   end
 
@@ -9,7 +9,7 @@ class AboutClassMethods < EdgeCase::Koan
     assert_equal __, fido.is_a?(Object)
   end
 
-  def test_classes_are_objects_too
+  def test_classes_are_classes
     assert_equal __, Dog.is_a?(Class)
   end
 
@@ -19,11 +19,11 @@ class AboutClassMethods < EdgeCase::Koan
 
   def test_objects_have_methods
     fido = Dog.new
-    assert_equal __, fido.methods.size
+    assert fido.methods.size > _n_
   end
 
   def test_classes_have_methods
-    assert_equal __, Dog.methods.size
+    assert Dog.methods.size > _n_
   end
 
   def test_you_can_define_methods_on_individual_objects
@@ -34,7 +34,7 @@ class AboutClassMethods < EdgeCase::Koan
     assert_equal __, fido.wag
   end
 
-  def test_other_objects_are_affected_by_these_singleton_methods
+  def test_other_objects_are_not_affected_by_these_singleton_methods
     fido = Dog.new
     rover = Dog.new
     def fido.wag
@@ -47,25 +47,25 @@ class AboutClassMethods < EdgeCase::Koan
   end
 
   # ------------------------------------------------------------------
-  
-  def Dog.wag
-    :class_level_wag
-  end
 
-  class Dog
+  class Dog2
     def wag
       :instance_level_wag
     end
   end
 
+  def Dog2.wag
+    :class_level_wag
+  end
+
   def test_since_classes_are_objects_you_can_define_singleton_methods_on_them_too
-    assert_equal __, Dog.a_class_method
+    assert_equal __, Dog2.wag
   end
 
   def test_class_methods_are_independent_of_instance_methods
-    fido = Dog.new
+    fido = Dog2.new
     assert_equal __, fido.wag
-    assert_equal __, Dog.wag
+    assert_equal __, Dog2.wag
   end
 
   # ------------------------------------------------------------------
@@ -96,14 +96,13 @@ class AboutClassMethods < EdgeCase::Koan
   def test_you_can_define_class_methods_inside_the_class
     assert_equal __, Dog.a_class_method
   end
-      
 
   # ------------------------------------------------------------------
 
   LastExpressionInClassStatement = class Dog
                                      21
                                    end
-  
+
   def test_class_statements_return_the_value_of_their_last_expression
     assert_equal __, LastExpressionInClassStatement
   end

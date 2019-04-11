@@ -1,13 +1,12 @@
-require 'edgecase'
+require File.expand_path(File.dirname(__FILE__) + '/neo')
 
-class DiceSet
-  attr_reader :values
-  def roll(n)
-    @values = (1..n).map { rand(6) + 1 }
-  end
-end
+# Implement a DiceSet Class here:
+#
+# class DiceSet
+#   code ...
+# end
 
-class AboutDiceSet < EdgeCase::Koan
+class AboutDiceProject < Neo::Koan
   def test_can_create_a_dice_set
     dice = DiceSet.new
     assert_not_nil dice
@@ -48,7 +47,7 @@ class AboutDiceSet < EdgeCase::Koan
     #
     # If the rolls are random, then it is possible (although not
     # likely) that two consecutive rolls are equal.  What would be a
-    # better way to test this.
+    # better way to test this?
   end
 
   def test_you_can_roll_different_numbers_of_dice

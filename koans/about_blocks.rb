@@ -1,6 +1,6 @@
-require 'edgecase'
+require File.expand_path(File.dirname(__FILE__) + '/neo')
 
-class AboutBlocks < EdgeCase::Koan
+class AboutBlocks < Neo::Koan
   def method_with_block
     result = yield
     result
@@ -23,7 +23,7 @@ class AboutBlocks < EdgeCase::Koan
   end
 
   def test_blocks_can_take_arguments
-    result = method_with_block_arguments do |argument|
+    method_with_block_arguments do |argument|
       assert_equal __, argument
     end
   end
@@ -60,7 +60,7 @@ class AboutBlocks < EdgeCase::Koan
 
   # ------------------------------------------------------------------
 
-  def test_block_can_effect_variables_in_the_code_where_they_are_created
+  def test_block_can_affect_variables_in_the_code_where_they_are_created
     value = :initial_value
     method_with_block { value = :modified_in_a_block }
     assert_equal __, value
@@ -70,27 +70,27 @@ class AboutBlocks < EdgeCase::Koan
     add_one = lambda { |n| n + 1 }
     assert_equal __, add_one.call(10)
 
-    # Alternative calling sequence
+    # Alternative calling syntax
     assert_equal __, add_one[10]
   end
 
   def test_stand_alone_blocks_can_be_passed_to_methods_expecting_blocks
     make_upper = lambda { |n| n.upcase }
     result = method_with_block_arguments(&make_upper)
-    assert_equal __, result    
+    assert_equal __, result
   end
 
   # ------------------------------------------------------------------
 
-  def method_with_explict_block(&block)
+  def method_with_explicit_block(&block)
     block.call(10)
   end
 
   def test_methods_can_take_an_explicit_block_argument
-    assert_equal __, method_with_explict_block { |n| n * 2 }
+    assert_equal __, method_with_explicit_block { |n| n * 2 }
 
     add_one = lambda { |n| n + 1 }
-    assert_equal __, method_with_explict_block(&add_one)
+    assert_equal __, method_with_explicit_block(&add_one)
   end
 
 end

@@ -1,6 +1,6 @@
-require 'edgecase'
+require File.expand_path(File.dirname(__FILE__) + '/neo')
 
-class AboutClasses < EdgeCase::Koan
+class AboutClasses < Neo::Koan
   class Dog
   end
 
@@ -43,7 +43,7 @@ class AboutClasses < EdgeCase::Koan
     fido = Dog2.new
     fido.set_name("Fido")
 
-    assert_equal __, fido.instance_variable_get("@name")    
+    assert_equal __, fido.instance_variable_get("@name")
   end
 
   def test_you_can_rip_the_value_out_using_instance_eval
@@ -89,7 +89,7 @@ class AboutClasses < EdgeCase::Koan
 
     assert_equal __, fido.name
   end
-  
+
   # ------------------------------------------------------------------
 
   class Dog5
@@ -125,12 +125,12 @@ class AboutClasses < EdgeCase::Koan
     # THINK ABOUT IT:
     # Why is this so?
   end
-  
-  def test_different_objects_have_difference_instance_variables
+
+  def test_different_objects_have_different_instance_variables
     fido = Dog6.new("Fido")
     rover = Dog6.new("Rover")
 
-    assert_not_equal rover.name, fido.name
+    assert_equal __, rover.name != fido.name
   end
 
   # ------------------------------------------------------------------
@@ -147,7 +147,7 @@ class AboutClasses < EdgeCase::Koan
     end
 
     def to_s
-      __
+      @name
     end
 
     def inspect
@@ -164,12 +164,12 @@ class AboutClasses < EdgeCase::Koan
 
   def test_to_s_provides_a_string_version_of_the_object
     fido = Dog7.new("Fido")
-    assert_equal "Fido", fido.to_s
+    assert_equal __, fido.to_s
   end
 
   def test_to_s_is_used_in_string_interpolation
     fido = Dog7.new("Fido")
-    assert_equal "My dog is Fido", "My dog is #{fido}"
+    assert_equal __, "My dog is #{fido}"
   end
 
   def test_inspect_provides_a_more_complete_string_version
@@ -186,5 +186,5 @@ class AboutClasses < EdgeCase::Koan
     assert_equal __, "STRING".to_s
     assert_equal __, "STRING".inspect
   end
- 
+
 end

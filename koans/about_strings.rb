@@ -1,6 +1,6 @@
-require 'edgecase'
+require File.expand_path(File.dirname(__FILE__) + '/neo')
 
-class AboutStrings < EdgeCase::Koan
+class AboutStrings < Neo::Koan
   def test_double_quoted_strings_are_strings
     string = "Hello, World"
     assert_equal __, string.is_a?(String)
@@ -40,7 +40,9 @@ class AboutStrings < EdgeCase::Koan
 It was the best of times,
 It was the worst of times.
 }
-    assert_equal __, long_string.size
+    assert_equal __, long_string.length
+    assert_equal __, long_string.lines.count
+    assert_equal __, long_string[0,1]
   end
 
   def test_here_documents_can_also_handle_multiple_lines
@@ -48,7 +50,9 @@ It was the worst of times.
 It was the best of times,
 It was the worst of times.
 EOS
-    assert_equal __, long_string.size
+    assert_equal __, long_string.length
+    assert_equal __, long_string.lines.count
+    assert_equal __, long_string[0,1]
   end
 
   def test_plus_will_concatenate_two_strings
@@ -128,7 +132,7 @@ EOS
     assert_equal __, string
   end
 
-  def test_any_ruby_expression_my_be_interpolated
+  def test_any_ruby_expression_may_be_interpolated
     string = "The square root of 5 is #{Math.sqrt(5)}"
     assert_equal __, string
   end
@@ -146,11 +150,20 @@ EOS
     # Surprised?
   end
 
-  def test_single_characters_are_represented_by_integers
-    assert_equal __, ?a
-    assert_equal __, ?a == 97
+  in_ruby_version("1.8") do
+    def test_in_older_ruby_single_characters_are_represented_by_integers
+      assert_equal __, ?a
+      assert_equal __, ?a == 97
 
-    assert_equal __, ?b == (?a + 1)
+      assert_equal __, ?b == (?a + 1)
+    end
+  end
+
+  in_ruby_version("1.9", "2") do
+    def test_in_modern_ruby_single_characters_are_represented_by_strings
+      assert_equal __, ?a
+      assert_equal __, ?a == 97
+    end
   end
 
   def test_strings_can_be_split
@@ -165,12 +178,20 @@ EOS
     assert_equal [__, __, __, __], words
 
     # NOTE: Patterns are formed from Regular Expressions.  Ruby has a
-    # very powerful Regular Expression library.  Unfortunately, time
-    # does not permit us to explore it in detail in Ruby 101.
+    # very powerful Regular Expression library.  We will become
+    # enlightened about them soon.
   end
 
   def test_strings_can_be_joined
     words = ["Now", "is", "the", "time"]
     assert_equal __, words.join(" ")
+  end
+
+  def test_strings_are_unique_objects
+    a = "a string"
+    b = "a string"
+
+    assert_equal __, a           == b
+    assert_equal __, a.object_id == b.object_id
   end
 end

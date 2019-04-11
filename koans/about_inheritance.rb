@@ -1,6 +1,6 @@
-require 'edgecase'
+require File.expand_path(File.dirname(__FILE__) + '/neo')
 
-class AboutInheritance < EdgeCase::Koan
+class AboutInheritance < Neo::Koan
   class Dog
     attr_reader :name
 
@@ -31,7 +31,7 @@ class AboutInheritance < EdgeCase::Koan
     assert_equal __, Chihuahua.ancestors.include?(Object)
   end
 
-  def test_subcases_inherit_behavior_from_parent_class
+  def test_subclasses_inherit_behavior_from_parent_class
     chico = Chihuahua.new("Chico")
     assert_equal __, chico.name
   end
@@ -60,20 +60,11 @@ class AboutInheritance < EdgeCase::Koan
     def bark
       super + ", GROWL"
     end
-
-    def growl
-      super.bark + ", GROWL"
-    end
   end
 
   def test_subclasses_can_invoke_parent_behavior_via_super
     ralph = BullDog.new("Ralph")
     assert_equal __, ralph.bark
-  end
-
-  def test_super_does_not_work_cross_method
-    ralph = BullDog.new("Ralph")
-    
   end
 
   # ------------------------------------------------------------------
